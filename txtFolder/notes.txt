@@ -1,0 +1,104 @@
+.vscode -->  settings.json (removed) + extensions.json
+the extensions.json is a file used by vscode to suggest or discourage extensions for a project. it helps to standardize tooling across a team and automate setup and avoid conflicts by blocking unwanted extensions.
+my file specifically:
+1. recommendations: platformio.platformio-ide
+recommends the platformio ide extension for embedded development because platformio provides built in toolchains and debuggers for embedded projects
+
+2. unwantedRecommendations: ms-vscode.cpptools-extension-pack
+discourages the microsoft c/c++ extension pack which includes tools for intellisense and debugging because it may conflict with platformio's own c/c++ tools or cause redundant features.
+
+----------------------------------------------------------------------
+
+include --> This directory is intended for project header files. A header file is a file containing C declarations and macro definitions
+to be shared between several project source files. You request the use of a header file in your project source file (C, C++, etc) located in `src` folder by including it, with the C preprocessing directive `#include'.
+
+----------------------------------------------------------------------
+
+lib --> This directory is intended for project specific (private) libraries. PlatformIO will compile them to static libraries and link into executable file.
+
+----------------------------------------------------------------------
+
+src --> source code folder; contains the actual logic
+
+----------------------------------------------------------------------
+
+src vs inc
+- source code vs include files or header files
+src folder is more for the actual code for your application
+or project. files like .cpp or .java or .py or .js
+include folder is for header files
+
+----------------------------------------------------------------------
+
+openocd.cfg
+- open on chip debugger, an open source tool used for
+debugging and flashing embedded systems. it is used as a bridge
+between the debugging software like GDB and the debug adapter
+it translates debugging commands into specific hardware instructions.
+this way, we can interact with embedded systems remotely and inspect the memory.
+
+my specific file is:
+1. interface configuration
+- specified the use of an stlink debug probe which i am using
+- setting the adapter speed to 4000 kHz
+2. transport protocol
+- selects the SWD (serial wire debug) protocol via HLA (high level adapter)
+3. target configuration
+- defines the chip name as stm32f091rctx and the board name as genericBoard
+- sets a work area size of 0x8000 (32 KB) for openOCD's scratchpad memory
+4. debug behavior
+- enables debugging during low-power modes (set ENABLE_LOW_POWER 1)
+- stops watchdog timers when the CPU is halted (set STOP_WATCHDOG 1)
+- sets te debug clock frequency to 8000 kHz (set CLOCK_FREQ 8000)
+5. reset configuration
+- disables hardware reset (reset_config none)
+- ensures the debugger does not connect under reset (set CONNECT_UNDER_RESET 0)
+6. target script
+- loads the stm32f0x target config, which includes CPU specific settings for the stm32f0 family
+
+----------------------------------------------------------------------
+
+platform.ini 
+A .ini file is a plain text configuration file used by computer software to store settings
+
+----------------------------------------------------------------------
+
+.gitignore
+a .gitignore file tells git which files or directories to ignore when tracking changes in a repository. this is useful for excluding:
+- temporary files (logs, etc)
+- ide/project config files
+- environment specific files (API keys, etc)
+- large binaries (.o files, compiled executables)
+all of these files won't be staged, committed, or pushed to the repository
+
+My specific .gitignore file is telling git to ignore the following:
+.pio 
+- ignores the platformio build directory, which containes compiled binaries, cached libraries, and temp files
+
+.vscode/.browse.c_cpp.db*
+- ignores vs code's c/c++ intellisense database (a cache for code navigation)
+- the * ensures that all variants are excluded
+
+.vscode/c_cpp_properties.json
+-ignores vscode's c/c++ config files, which contains machine specific paths (like compiler locations)
+- this file is usually recreated by the ide or platformio
+
+.vscode/launch.json
+- ignore vscode's debug launch configurations
+
+.vscode/ipch
+- ignores vscode's precompiled header cache (used to speed up intellisense)
+- this is a large, temporary directory that shouldn't be shared
+
+----------------------------------------------------------------------
+
+stlink
+- this is a debug probe. it is a tool used for programming and debugging stm32 microcontrollers. it usually communicates with a host computer via USB. it is used to flash firmware onto the mcu's flash memory, loading the program that the mcu will execute. it allows developers to step through their code, set breakpoints, check memory, etc.
+- used for flashing code and debugging and uploading firmware
+- can power the board
+----------------------------------------------------------------------
+
+usb-->uart
+- A USB-to-UART bridge is an electronic circuit that translates between the USB and UART communication protocols. It essentially acts as a "translator" allowing devices to communicate with each other using different data formats. This is commonly used in embedded systems to connect microcontrollers to computers, as microcontrollers often use UART for serial communication while computers primarily use USB
+- for user i/o
+- sending and receiving user text

@@ -1,0 +1,30 @@
+Project Overview: EEPROM-Backed Digital Diary
+
+This will be a a serial terminal interface in which users can
+- enter diary entries
+- search entries by keyword
+- retrieve entries by keyword
+- secure entries with encryption
+
+Components:
+- Microcontroller
+- Built-in or external EEPROM
+- USB to Serial connection (for serial terminal interface)
+- RTC module for timestamping
+
+Tools:
+- PlatformIO
+- Serial Terminal (PuTTY)
+- EEPROM system library
+- Embedded C for firmware
+
+Features:
+1. Entry Writing Interface - prompt the user via serial to enter a diary entry and accept text up to a certain character limit
+
+2. Entry Storage Logic - store entries as structs, entries are stored in eeprom sequentially, and maintain a simple index table at the start of eeprom with addresses of entries
+
+3. Keyword-Based Search - read tags from index table and if keyword matches, print the corresponding entry by jumping to its eeprom addresses
+
+4. Timestamping - use RTC to get the current date and store it alongside entries, and display the date when retrieving the entries
+
+5. Encryption - use a basic encryption code to encrypt each character before storing and then decrypt it on retrieval
