@@ -102,3 +102,13 @@ usb-->uart
 - A USB-to-UART bridge is an electronic circuit that translates between the USB and UART communication protocols. It essentially acts as a "translator" allowing devices to communicate with each other using different data formats. This is commonly used in embedded systems to connect microcontrollers to computers, as microcontrollers often use UART for serial communication while computers primarily use USB
 - for user i/o
 - sending and receiving user text
+
+----------------------------------------------------------------------
+
+framework=cmsis
+
+cmsis vs stm32's HAL
+
+CMSIS and STM StdPeriph/HAL/LL libraries are not designed for the same task. CMSIS is from ARM and provides access to generic hardware that all cortex M processors have such as NVIC, MPU, FPU, and similar. The STM libraries provide access to STM specific hardware such as GPIO, DMA, UARTs, etc. Other manufacturers have different hardware peripherals and different libraries. CMSIS is common for all Cortex M chips.
+
+----------------------------------------------------------------------

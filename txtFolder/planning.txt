@@ -28,3 +28,242 @@ Features:
 4. Timestamping - use RTC to get the current date and store it alongside entries, and display the date when retrieving the entries
 
 5. Encryption - use a basic encryption code to encrypt each character before storing and then decrypt it on retrieval
+
+----------------------------------------------------------------------
+
+Considerations:
+- STM32F091 on PlatformIO
+- Emulated EEPROM via STM32 HAL
+- Serial Terminal Interface (PuTTY)
+
+----------------------------------------------------------------------
+
+MODIFIED PROJECT PLAN (CMSIS ONLY)
+✅ STEP 1 — FLASH-BASED EEPROM EMULATION DRIVER
+Files:
+src/eeprom_driver.c
+
+include/eeprom_driver.h
+
+Tasks:
+✅ Pick two reserved Flash pages (e.g., Page 63 and 62) for storing data.
+
+Flash base: 0x08000000
+
+Each page = 2 KB → 0x0800FC00 and 0x0800F800
+
+✅ Implement flash_unlock() and flash_lock():
+
+Use CMSIS register access: FLASH->KEYR, FLASH->CR, FLASH->SR
+
+✅ Implement:
+
+c
+Copy code
+void flash_erase_page(uint32_t pageAddress);
+void flash_write_halfword(uint32_t address, uint16_t data);
+uint16_t flash_read_halfword(uint32_t address);
+✅ Build EEPROM wrapper:
+
+c
+Copy code
+int eeprom_write(uint32_t virtualAddr, uint8_t* data, uint16_t len);
+int eeprom_read(uint32_t virtualAddr, uint8_t* buffer, uint16_t len);
+✅ Maintain a pointer in Flash for the next available address (or use a simple log-based system).
+
+✅ STEP 2 — METADATA INDEX STRUCTURE
+Same concept as before but stored manually in Flash.
+
+Struct:
+c
+Copy code
+typedef struct {
+  uint32_t flashAddr;
+  uint16_t length;
+  char tag[10];
+  uint32_t timestamp;
+} DiaryEntryIndex;
+Tasks:
+✅ Define a fixed Flash page (e.g., 0x0800F400) for metadata index table.
+
+✅ Manually store/read metadata from Flash using flash_write_halfword() and your struct as bytes.
+
+✅ Functions:
+
+c
+Copy code
+int add_entry_index(DiaryEntryIndex entry);
+int search_entry_by_tag(const char* tag, DiaryEntryIndex* out);
+int get_all_entry_indices(DiaryEntryIndex* outArray, int max);
+✅ STEP 3 — UART SERIAL INTERFACE
+Files:
+src/serial.c
+
+include/serial.h
+
+Tasks:
+✅ Manually initialize USART2 using CMSIS (no HAL):
+
+Enable RCC for GPIOA and USART2
+
+Set PA2 (TX) and PA3 (RX) to alternate function
+
+Configure USART2 registers directly
+
+✅ Implement blocking serial_read_line() and serial_write_string().
+
+✅ Handle commands:
+
+shell
+Copy code
+> write
+> search tag
+> read index
+✅ STEP 4 — ENTRY STORAGE + RETRIEVAL MODULE
+Tasks:
+✅ Implement diary entry saving:
+
+Accept tag + text
+
+Allocate Flash space for entry
+
+Write using flash_write_halfword() loop
+
+Save index metadata to index table
+
+✅ Implement diary retrieval:
+
+Read metadata index
+
+Fetch content from Flash
+
+Print via UART
+
+✅ STEP 5 — USER COMMAND WORKFLOWS
+Same as before, now tied to low-level drivers.
+
+✅ write
+
+Prompt user for tag
+
+Accept text ending in #
+
+Save to Flash, store metadata
+
+✅ search
+
+Match tag in metadata
+
+Show flash address
+
+✅ read
+
+Accept index
+
+Lookup address
+
+Read & display content
+
+🔐 STEP 6 — XOR ENCRYPTION (optional)
+No change:
+
+c
+Copy code
+void xor_encrypt(uint8_t* data, uint16_t len, uint8_t key);
+🕒 STEP 7 — TIMESTAMPING (optional)
+You’ll need to:
+
+Write I2C register-level code for RTC (DS3231)
+
+Fetch time as raw bytes and store in metadata
+
+Or just simulate timestamp as uint32_t incrementing counter.
+
+📂 MODIFIED FILE STRUCTURE
+pgsql
+Copy code
+/EEPROM-Digital-Diary-CMSIS/
+├── include/
+│   ├── eeprom_driver.h
+│   ├── diary.h
+│   ├── serial.h
+├── src/
+│   ├── main.c
+│   ├── eeprom_driver.c
+│   ├── diary.c
+│   ├── serial.c
+├── platformio.ini
+✅ CMSIS-ONLY TO-DO LIST
+Step	Task	CMSIS Implementation
+1	Raw flash EEPROM emulation	🆕
+2	Flash-based metadata system	🆕
+3	USART2 initialization via registers	🆕
+4	Entry text storage and search	🆕
+5	Serial command UI via UART	🆕
+6	Optional encryption	Same
+7	Optional RTC timestamping	Manual I2C or simulated
+
+----------------------------------------------------------------------
+
+Block Diagram
+
+---------------------       ---------------------
+Serial Interface    |       |MCU                |
+- enter tag         |       | - UART            |
+- enter entry       |-----> | - Encryption      |
+- search entries    |       | - RTC             |
+- retrieve entries  |       |                   |
+---------------------       ---------------------
+                                |           ^
+                                |           |
+                              write        read
+                             metadata      entry
+                                |           |
+                                V           |
+                        --------------- -----------------
+                        |             | |               |
+                        |metadata idx | |Diary entries  |
+                        |             | |               |
+                        --------------- -----------------
+                                |           ^
+                                | read      |
+                                | metadata  |
+                                |           |
+                                -------------
+
+----------------------------------------------------------------------
+
+main.C
+main(): entry point of the program,
+system_init(): initializes the system clocks and peripherals
+command_loop(): runs the main command parsing loop
+
+eepromDriver.C
+flash_unlock(): unlocks flash memory for write/erase 
+flash_lock(): locks flash memory after operations
+flash_erase_page(): erases a full flash memory page 
+flash_write_halfward(): writes a 16 bit data to flash 
+flash_read_halfword(): reads 16 bit data from flash 
+eeprom_write(): wrotes a buffer to flash using halfward programming
+eeprom_read(): reads a buffer from flash 
+
+diary.C
+add_entry_index(): adds a new metadata record to index storage
+get_all_entry_indices(): Loads all saved metadata records
+find_entry_by_tag: searches metadata for matching tag
+store_diary_entry(): saves diary content and its metadata
+load_diary_entry(): loads full content based on index
+
+serial.C
+uart_init(); sets up usart2 using cmsis register level configuration
+serial_read_line(): blocking read from uart until newline or terminator
+serial_write_string(): sends string data to uart
+parse_command(): parses input commands
+handle_write_command(): implements interaction for writing an entry
+handle_read_command(): fetches and prints entry content
+handle_search_command(): finds entries matching a keyword
+
+utils.C
+xor_encrypt(): applies XOR encryption/decryption to a byte buffer
+simulate_timestamp(): generates a dummy timestamp (if no RTC)
+hex_dump(): debugging function ro print flash contents
