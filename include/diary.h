@@ -12,9 +12,8 @@
 
 
 #define INDEX_TABLE_ADDRESS FLASH_PAGE_62_ADDRESS
-#define CONTENT_START_ADDRESS (FLASH_PAGE_62_ADDRESS + 0x200)  // Start content after index table
+#define CONTENT_START_ADDRESS (FLASH_PAGE_62_ADDRESS + 0x200)
 
-//diary entry struct
 typedef struct 
 {
     uint32_t flashAddress;
@@ -23,7 +22,6 @@ typedef struct
     uint32_t timestamp;
 } DiaryEntryIndex;
 
-// functions
 int addEntryIndex(const DiaryEntryIndex*);
 int getAllEntryIndices(DiaryEntryIndex*, uint16_t);
 int findEntryByTag(const char*, DiaryEntryIndex*);

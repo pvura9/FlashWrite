@@ -1,12 +1,16 @@
-
 #ifndef __FIFO_H__
 #define __FIFO_H__
 
-struct fifo {
-    char buffer[128]; // circular buffer for the fifo
-    volatile uint8_t head; // the first thing to remove from the fifo
-    volatile uint8_t tail; // the next place to insert a new character
-    volatile uint8_t newline; // offset of last-entered newline
+struct fifo 
+{
+    //circular buffer for fifo
+    char buffer[128];
+    //first thing to remove from fifo
+    volatile uint8_t head;
+    //next place to insert new char
+    volatile uint8_t tail;
+    //offset of previously entered newline
+    volatile uint8_t newline;
 };
 
 int fifo_empty(const struct fifo *f);

@@ -1,7 +1,5 @@
-
 #ifndef __TTY_H__
 #define __TTY_H__
-
 #include "fifo.h"
 
 extern struct fifo input_fifo;

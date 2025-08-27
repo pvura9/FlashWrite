@@ -2,7 +2,7 @@
 *Designed & Implemented by Sai Vura (ECE student @ Purdue University) as a Personal Project*
 
 ## <u>Abstract</u>
-The “FlashWrite” is a secure, password-protected, embedded journaling system built on an STM32 microcontroller platform. It allows users to create, store, read, view, and delete diary entries through a serial terminal interface. All data is saved to the EEPROM memory. Very simple encryption and decryption methods have been implemented for safe storage and retrieval of data into the memory of the microcontroller. Designed with resource constrained hardware, this project emphasizes efficient memory usage, real-time input handling, and a modular firmware development. This diary serves as both a practical tool and an educational demo of embedded systems design.
+The “FlashWrite” is a secure, password-protected, embedded journaling system built on an STM32 microcontroller platform. It allows users to create, store, read, view, and delete diary entries through a serial terminal interface. All data is saved to the EEPROM memory. Very simple encryption and decryption methods have been implemented for safe storage and retrieval of data into the memory of the microcontroller. Designed with limited hardware, this project emphasizes efficient memory usage, real-time input handling, and a modular firmware development. This diary serves as both a practical tool and an educational demo of embedded systems design.
 
 
 ## <u>Features / Demo</u>
