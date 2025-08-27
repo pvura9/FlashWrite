@@ -104,8 +104,8 @@ flowchart TB
   %% ---------- Memory ----------
   subgraph mem[Memory]
     direction TB
-    fp62["Flash Page 62<br/>(Metadata Storage)"]
-    fp63["Flash Page 63<br/>(Content Storage)"]
+    fp62["Flash Page 62 (Metadata storage)"]
+    fp63["Flash Page 63 (Content storage)"]
   end
   style mem fill:#fff3d4,stroke:#333,stroke-width:1px,color:#000, rx:20, ry:20
 
@@ -129,7 +129,7 @@ flowchart LR
   classDef head fill:#ffffff,stroke:#333,stroke-width:1px,color:#000,rx:20,ry:20
 
   %% ---------- Left Column: Metadata Page ----------
-  subgraph leftStack["Flash Page 62 (Metadata Storage)"]
+  subgraph leftStack["Page 62 (Metadata)"]
     direction TB
     mh["<u>Metadata Header</u>
     tracks system version,
@@ -145,7 +145,7 @@ flowchart LR
   style leftStack fill:#d4e6f8,stroke:#333,stroke-width:1px,rx:20,ry:20,color:#000
 
   %% ---------- Right Column: Content Page ----------
-  subgraph rightStack["Flash Page 63 (Content Storage)"]
+  subgraph rightStack["Page 63 (Content)"]
     direction TB
     cfree["...(free space grows upward)..."]:::box
     c2["<u>Entry #2 Content</u>
