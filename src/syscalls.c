@@ -43,7 +43,11 @@
 *****************************************************************************
 */
 
-/* Includes */
+/*
+This module provides minimal system call implementations to enable standard I/O
+*/
+
+
 #include <sys/stat.h>
 #include <stdlib.h>
 #include <errno.h>
@@ -54,7 +58,6 @@
 #include <sys/times.h>
 
 
-/* Variables */
 //#undef errno
 extern int errno;
 extern int __io_putchar(int ch) __attribute__((weak));
@@ -100,6 +103,7 @@ int _read (int file, char *ptr, int len)
 return len;
 }
 
+
 int _write(int file, char *ptr, int len)
 {
 	int DataIdx;
@@ -110,6 +114,7 @@ int _write(int file, char *ptr, int len)
 	}
 	return len;
 }
+
 
 caddr_t _sbrk(int incr)
 {

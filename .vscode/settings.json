@@ -1,0 +1,4 @@
+{
+  "serialMonitor.baudRate": 115200,
+  "serialMonitor.port": "COM3"
+}

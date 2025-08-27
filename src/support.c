@@ -1,3 +1,6 @@
+/*
+This module provides low-level hardware and timing functions for the user interface.
+*/
 #include "stm32f0xx.h"
 #include <stdio.h>
 #include <string.h> // for memmove()

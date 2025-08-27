@@ -95,6 +95,11 @@ Copy code
 int add_entry_index(DiaryEntryIndex entry);
 int search_entry_by_tag(const char* tag, DiaryEntryIndex* out);
 int get_all_entry_indices(DiaryEntryIndex* outArray, int max);
+
+
+
+
+
 ✅ STEP 3 — UART SERIAL INTERFACE
 Files:
 src/serial.c
@@ -208,7 +213,7 @@ Step	Task	CMSIS Implementation
 Block Diagram
 
 ---------------------       ---------------------
-Serial Interface    |       |MCU                |
+Serial Interface    |       |       MCU         |
 - enter tag         |       | - UART            |
 - enter entry       |-----> | - Encryption      |
 - search entries    |       | - RTC             |
@@ -266,4 +271,4 @@ handle_search_command(): finds entries matching a keyword
 utils.C
 xor_encrypt(): applies XOR encryption/decryption to a byte buffer
 simulate_timestamp(): generates a dummy timestamp (if no RTC)
-hex_dump(): debugging function ro print flash contents
+hex_dump(): debugging function to print flash contents
